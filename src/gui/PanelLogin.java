@@ -15,6 +15,11 @@ import javax.swing.text.SimpleAttributeSet;
 import javax.swing.text.StyleConstants;
 import javax.swing.text.StyledDocument;
 
+import chatClient.ActionListenerCancel;
+import chatClient.ActionListenerCreate;
+import chatClient.ActionListenerLogin;
+import chatServer.ChatServerInterface;
+
 
 
 
@@ -27,7 +32,8 @@ public class PanelLogin extends JPanel
 // --------------------------------------------
 // Attributes:
 // --------------------------------------------
-	private final static double	PARTITION_HEIGHT			= 1.5/10.;
+	private final static double	PARTITION_HEIGHT_TOP		= 1.5/10.;
+	private final static double	PARTITION_HEIGHT_MAIN		= 9./10.;
 	private final static String	TOP_PANEL_TEXT				= "Login Panel";
 	private final static Color 	TOP_PANEL_COLOR				= Color.BLACK;
 	private final static Color 	TOP_PANEL_TEXT_COLOR		= Color.WHITE;
@@ -39,74 +45,98 @@ public class PanelLogin extends JPanel
 	private final static int	BOTTOM_PANEL_NBR_LIGN		= 10;
 	private final static int	BOTTOM_PANEL_NBR_COLOMN		= 2;
 	private final static int	BOTTOM_PANEL_NAME_HEIGHT	= BOTTOM_PANEL_NBR_LIGN/5;
-	private final static int	BOTTOM_PANEL_BUTTON_HEIGHT	= BOTTOM_PANEL_NBR_LIGN-BOTTOM_PANEL_NBR_LIGN/5;
+	private final static int	BOTTOM_PANEL_PASSWORD_HEIGHT= BOTTOM_PANEL_NAME_HEIGHT + 1;
 
 	private final static String	NAME_LABEL_TEXT				= "User name";
 	private final static String	NAME_LABEL_FONT_NAME		= "Arial";
 	private final static int	NAME_LABEL_FONT_TYPE		= Font.BOLD | Font.HANGING_BASELINE;
 	private final static int	NAME_LABEL_FONT_SIZE		= 20;
 
+	private final static String	PASSWORD_LABEL_TEXT			= "Password";
+	private final static String	PASSWORD_LABEL_FONT_NAME	= "Arial";
+	private final static int	PASSWORD_LABEL_FONT_TYPE	= Font.BOLD | Font.HANGING_BASELINE;
+	private final static int	PASSWORD_LABEL_FONT_SIZE	= 20;
+
+	private JSplitPane	frameOrganizerTop;
 	private JSplitPane	frameOrganizerMain;
-	private JPanel		bottomPanel;
 	private JTextField	nameTextField;
-	private JButton		okButton;
+	private JTextField	passwordTextField;
+	private JButton		loginButton;
+	private JButton		creatAccountButton;
 	private JButton		cancelButton;
+
+	private ChatServerInterface	server;
 
 // --------------------------------------------
 // Builder:
 // --------------------------------------------
-	public PanelLogin()
+	public PanelLogin(ChatServerInterface server)
 	{
 		super();
+		this.server				= server;
 		JTextPane topPanel		= new JTextPane();
-		this.bottomPanel		= new JPanel();
+		JPanel bottomPanel		= new JPanel();
+		JPanel buttonPanel		= new JPanel();
 		this.nameTextField		= new JTextField();
-		this.okButton			= new JButton("Ok");
+		this.passwordTextField	= new JTextField();
+		this.loginButton			= new JButton("Login");
+		this.creatAccountButton	= new JButton("Creat account");
 		this.cancelButton		= new JButton("Cancel");
 		Font topPanelFont		= new Font(TOP_PANEL_FONT_NAME, TOP_PANEL_FONT_TYPE, TOP_PANEL_FONT_SIZE);
 		Font nameLabelFont		= new Font(NAME_LABEL_FONT_NAME, NAME_LABEL_FONT_TYPE, NAME_LABEL_FONT_SIZE);
+		Font passwordLabelFont	= new Font(PASSWORD_LABEL_FONT_NAME, PASSWORD_LABEL_FONT_TYPE, PASSWORD_LABEL_FONT_SIZE);
 		JTextPane nameLabel		= new JTextPane();
+		JTextPane passwordLabel	= new JTextPane();
 
 		topPanel.setText(TOP_PANEL_TEXT);												// Init the top panel
 		topPanel.setFont(topPanelFont);
 		topPanel.setBackground(TOP_PANEL_COLOR);
-		StyledDocument doc = topPanel.getStyledDocument();									//		Center the text
+		StyledDocument doc = topPanel.getStyledDocument();								//		Center the text
 		SimpleAttributeSet attributs = new SimpleAttributeSet();
 		StyleConstants.setAlignment(attributs, StyleConstants.ALIGN_CENTER);
 		StyleConstants.setForeground(attributs, TOP_PANEL_TEXT_COLOR);
 		doc.setParagraphAttributes(0, doc.getLength(), attributs, false);
 
-		this.bottomPanel.setBackground(BOTTOM_PANEL_COLOR);									// Init the bottom panel
-		this.bottomPanel.setLayout(new GridLayout(BOTTOM_PANEL_NBR_LIGN, BOTTOM_PANEL_NBR_COLOMN));
+		bottomPanel.setBackground(BOTTOM_PANEL_COLOR);									// Init the bottom panel
+		bottomPanel.setLayout(new GridLayout(BOTTOM_PANEL_NBR_LIGN, BOTTOM_PANEL_NBR_COLOMN));
 		nameLabel.setText(NAME_LABEL_TEXT);
 		nameLabel.setFont(nameLabelFont);
+		passwordLabel.setText(PASSWORD_LABEL_TEXT);
+		passwordLabel.setFont(passwordLabelFont);
 		for (int i=0; i<BOTTOM_PANEL_NBR_LIGN; i++)
 		{
 			if (i == BOTTOM_PANEL_NAME_HEIGHT)
 			{
-				this.bottomPanel.add(nameLabel);
-				this.bottomPanel.add(this.nameTextField);
+				bottomPanel.add(nameLabel);
+				bottomPanel.add(this.nameTextField);
 			}
-			else if (i == BOTTOM_PANEL_BUTTON_HEIGHT)
+			else if (i == BOTTOM_PANEL_PASSWORD_HEIGHT)
 			{
-				this.bottomPanel.add(okButton);
-				this.bottomPanel.add(cancelButton);
+				bottomPanel.add(passwordLabel);
+				bottomPanel.add(this.passwordTextField);
 			}
 			else
 			{
-				this.bottomPanel.add(new JPanel());
-				this.bottomPanel.add(new JPanel());
+				bottomPanel.add(new JPanel());
+				bottomPanel.add(new JPanel());
 			}
 		}
 
-		this.okButton.addActionListener(new ActionPerformer(this, "TODO"));					// Init the button
-		this.cancelButton.addActionListener(new ActionPerformer(this, "TODO"));
+		buttonPanel.add(loginButton);													// Init the button
+		buttonPanel.add(creatAccountButton);
+		buttonPanel.add(cancelButton);
 
-		this.setLayout(new GridLayout(1, 1));												// Init the frame
-		this.frameOrganizerMain = new JSplitPane(JSplitPane.VERTICAL_SPLIT, true, topPanel, bottomPanel);
-		this.frameOrganizerMain.setDividerSize(10);
+		this.loginButton.addActionListener(new ActionListenerLogin(this, this.server));
+		this.creatAccountButton.addActionListener(new ActionListenerCreate(this, this.server));
+		this.cancelButton.addActionListener(new ActionListenerCancel());
+
+		this.setLayout(new GridLayout(1, 1));											// Init the frame
+		this.frameOrganizerTop = new JSplitPane(JSplitPane.VERTICAL_SPLIT, true, topPanel, bottomPanel);
+		this.frameOrganizerMain= new JSplitPane(JSplitPane.VERTICAL_SPLIT, true, frameOrganizerTop, buttonPanel);
 		this.frameOrganizerMain.setDividerSize(3);
+		this.frameOrganizerTop.setDividerSize(3);
 		this.frameOrganizerMain.setEnabled(false);
+		this.frameOrganizerTop.setEnabled(false);
 		this.add(frameOrganizerMain);
 	}
 
@@ -115,9 +145,21 @@ public class PanelLogin extends JPanel
 // --------------------------------------------
 	public void setSize(int width, int height)
 	{
-		double dividerHeight = PARTITION_HEIGHT * (double)height;
+		double dividerHeightTop		= PARTITION_HEIGHT_TOP * (double)height;
+		double dividerHeightMain	= PARTITION_HEIGHT_MAIN * (double)height;
 
 		super.setSize(width, height);
-		this.frameOrganizerMain.setDividerLocation((int) dividerHeight);
+		this.frameOrganizerTop.setDividerLocation((int) dividerHeightTop);
+		this.frameOrganizerMain.setDividerLocation((int) dividerHeightMain);
+	}
+
+	public String getUserName()
+	{
+		return this.nameTextField.getText();
+	}
+
+	public String getPassword()
+	{
+		return this.passwordTextField.getText();
 	}
 }

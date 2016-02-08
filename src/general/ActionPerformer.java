@@ -15,8 +15,8 @@ public class ActionPerformer implements ActionListener
 // --------------------------------------------
 // Attributes
 // --------------------------------------------
-	private Object targetObject;
-	private String action;
+	private Object		targetObject;
+	private String		action;
 
 // --------------------------------------------
 // Builder
@@ -30,8 +30,8 @@ public class ActionPerformer implements ActionListener
 // --------------------------------------------
 // Getters / setters
 // --------------------------------------------
-	public Object getTarget()	{return this.targetObject;}
-	public String getAction()	{return this.action;}
+	public Object	getTarget()	{return this.targetObject;}
+	public String	getAction()	{return this.action;}
 
 // --------------------------------------------
 // ActionListener interface

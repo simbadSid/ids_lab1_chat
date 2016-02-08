@@ -4,6 +4,8 @@ import general.ActionPerformer;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.GridLayout;
+import java.util.Locale;
+
 import javax.swing.JButton;
 import javax.swing.JPanel;
 import javax.swing.JSplitPane;
@@ -11,6 +13,9 @@ import javax.swing.JTextPane;
 import javax.swing.text.SimpleAttributeSet;
 import javax.swing.text.StyleConstants;
 import javax.swing.text.StyledDocument;
+
+import chatClient.ActionListenerSend;
+import chatServer.ChatServerInterface;
 
 
 
@@ -76,12 +81,15 @@ public class PanelChat extends JPanel
 	private JButton		sendButton;
 	private JButton		addConversationButton;
 
+	private ChatServerInterface	server;
+
 // --------------------------------------------
 // Builder:
 // --------------------------------------------
-	public PanelChat()
+	public PanelChat(ChatServerInterface server)
 	{
 		super();
+		this.server						= server;
 		JTextPane topLeftPanel			= new JTextPane();
 		JTextPane topRightPanel			= new JTextPane();
 		JTextPane bottomRightPanel		= new JTextPane();
@@ -141,8 +149,8 @@ public class PanelChat extends JPanel
 		StyleConstants.setForeground(attributsBR, BOTTOM_RIGHT_PANEL_TEXT_COLOR);
 		docBottomRight.setParagraphAttributes(0, docBottomRight.getLength(), attributsBR, false);
 
-		this.sendButton.addActionListener(new ActionPerformer(this, "TODO"));				// Init the buttons
-		this.addConversationButton.addActionListener(new ActionPerformer(this, "TODO"));
+		this.sendButton.addActionListener(new ActionListenerSend(this, this.server));		// Init the buttons
+//		this.addConversationButton.addActionListener(new ActionPerformer(this, "TODO", null));
 
 		this.setLayout(new GridLayout(1, 1));												// Init the frame
 		this.frameOrganizerTopLeft		= new JSplitPane(JSplitPane.VERTICAL_SPLIT, true, topLeftPanel, middleLeftPanel);
@@ -183,5 +191,20 @@ public class PanelChat extends JPanel
 		this.frameOrganizerRight		.setDividerLocation((int)dividerHeightMR);
 		this.frameOrganizerTopRight		.setDividerLocation((int)dividerHeightTR);
 		this.frameOrganizerMain			.setDividerLocation((int)dividerWidthMain);
+	}
+
+	public String getWrittenMessage()
+	{
+		return this.toSendMessagePanel.getText();
+	}
+
+	public String getConversationName()
+	{
+		throw new RuntimeException("Not implemented yet");
+	}
+
+	public String getUserName()
+	{
+		throw new RuntimeException("Not implemented yet");
 	}
 }

@@ -39,15 +39,17 @@ public class ChatClient implements Runnable
 	@Override
 	public void run()
 	{
+		Registry registry = null;
+		ChatServerInterface	serverInterface = null;
 		try
 		{
 			// Get remote object reference
-//			Registry			registry		= LocateRegistry.getRegistry(this.remoteHostIP);
-//			ChatServerInterface	serverInterface	= (ChatServerInterface)registry.lookup(ChatServer.remoteObjectReference);
+//			registry		= LocateRegistry.getRegistry(this.remoteHostIP);
+//			serverInterface	= (ChatServerInterface)registry.lookup(ChatServer.remoteObjectReference);
 
 			// Init the graphical interface
-			this.gui			= new GuiController();
-			this.gui.setCurrentPanel(GuiController.PANEL_LOGIN_ID);
+			this.gui			= new GuiController(serverInterface);
+			this.gui.setCurrentPanel(GuiController.PANEL_CHAT_ID);
 		}
 		catch(Exception e)
 		{

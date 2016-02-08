@@ -32,18 +32,36 @@ public class ChatServerImpl implements ChatServerInterface
 	@Override
 	public ChatServerAnswer CreateUser(String userName, String password) throws RemoteException
 	{
-		return "CreateUser";
+		if (this.userSet.containsKey(userName))	return ChatServerAnswer.SERVER_USER_ALREADY_EXIST;
+
+		User newUser = new User(userName, password);
+		return ChatServerAnswer.SERVER_OK;
 	}
 
 	public ChatServerAnswer CreateConversation(String userName, String convName) throws RemoteException
 	{
-		throw new RuntimeException("Not implelented yet");
+		if (!this.userSet.containsKey(userName))		return ChatServerAnswer.SERVER_USER_UNKNOWN;
+		if (this.conversationSet.containsKey(convName))	return ChatServerAnswer.SERVER_CONVERSATION_ALREADY_EXIST;
+
+		this.conversationSet.put(convName, new Conversation(convName));
+		return ChatServerAnswer.SERVER_OK;
 	}
 
 	@Override
 	public ChatServerAnswer JoinConversation(String userName, String convName) throws RemoteException
 	{
-		throw new RuntimeException("Not implelented yet");
+		if (!this.userSet.containsKey(userName))		return ChatServerAnswer.SERVER_USER_UNKNOWN;
+		if (!this.conversationSet.containsKey(convName))return ChatServerAnswer.SERVER_CONVERSATION_UNKNOWN;
+
+		Conversation	conv	= this.conversationSet.get(convName);
+		User			user	= this.userSet.get(userName);
+
+		user.addConversation(convName);
+		conv.addUser(user);
+		
+		
+		
+throw new RuntimeException("Not implelented yet");
 	}
 
 }
