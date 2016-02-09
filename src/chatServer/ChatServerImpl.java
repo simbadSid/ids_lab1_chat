@@ -50,10 +50,10 @@ public class ChatServerImpl implements ChatServerInterface
 		try {
 			in = new Scanner(new File(fileName));
 		} catch (FileNotFoundException e) {
-			this.conversationSet.put(fileName, new Conversation(convName));
+			this.conversationSet.put(convName, new Conversation(convName));
 			return ChatServerAnswer.SERVER_OK;
 		}
-		this.conversationSet.put(fileName, new Conversation(convName, in));
+		this.conversationSet.put(convName, new Conversation(convName, in));
 
 		return ChatServerAnswer.SERVER_OK;
 	}

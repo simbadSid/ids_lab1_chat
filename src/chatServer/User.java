@@ -12,7 +12,7 @@ public class User
 // ----------------------------------
 // Attributes
 // ----------------------------------
-	public static final String	userConversationsDir = "resource/userConversations/";
+	public static final String	userConversationsDir = "resource/";
 
 	private String				userName;
 	private String				password;
@@ -26,11 +26,6 @@ public class User
 		this.userName				= new String(userName);
 		this.password				= new String(password);
 		this.converstionNameList	= new LinkedList<String>();
-
-		String dirName = userConversationsDir + userName;			// Create the dir for conversation
-		File dir = new File(dirName);
-		boolean test = dir.mkdir();
-		if (!test) throw new RuntimeException("Failed to create the directory " + dirName);
 	}
 
 // ----------------------------------
@@ -45,7 +40,7 @@ public class User
 // ----------------------------------
 	public void addConversation(String conversationName)
 	{
-		String fileName = userConversationsDir + userName + "/" + conversationName;
+		String fileName = userConversationsDir + conversationName;
 
 		this.converstionNameList.add(new String(conversationName));
 		try

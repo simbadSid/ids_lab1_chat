@@ -28,10 +28,16 @@ public class ChatServer
 		try
 		{
 			ChatServerImpl		serverImpl	= new ChatServerImpl();
-			ChatServerInterface	server_stub	= (ChatServerInterface) UnicastRemoteObject.exportObject(serverImpl, remoteServerPort);
-			Registry			registry	= LocateRegistry.getRegistry();
-System.out.println("----------------" + server_stub);
-			registry.bind(remoteObjectReference, server_stub);
+			System.out.println(serverImpl.CreateUser("User1", "Pass1"));
+			System.out.println(serverImpl.CreateConversation("User1", "ConvName"));
+			System.out.println(serverImpl.CreateUser("User2", "Pass2"));
+			System.out.println(serverImpl.JoinConversation("User2", "ConvName"));
+			System.out.println(serverImpl.AddMessage("Message1", "ConvName"));
+			//AddMessage
+			//ChatServerImpl	server_stub	= (ChatServerImpl) UnicastRemoteObject.exportObject(serverImpl, remoteServerPort);
+			//Registry			registry	= LocateRegistry.getRegistry();
+			//System.out.println("----------------" + server_stub);
+			//registry.bind(remoteObjectReference, server_stub);
 
 			System.out.println("Server ready");
 		}
