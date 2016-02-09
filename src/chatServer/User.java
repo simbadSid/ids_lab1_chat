@@ -40,18 +40,7 @@ public class User
 // ----------------------------------
 	public void addConversation(String conversationName)
 	{
-		String fileName = userConversationsDir + conversationName;
-
 		this.converstionNameList.add(new String(conversationName));
-		try
-		{
-			new BufferedWriter(new OutputStreamWriter(new FileOutputStream(fileName), "utf-8"));
-		}
-		catch(Exception e)
-		{
-			e.printStackTrace();
-			System.exit(0);
-		}
 	}
 
 }

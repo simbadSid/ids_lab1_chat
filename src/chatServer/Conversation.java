@@ -8,34 +8,37 @@ import java.util.LinkedList;
 import java.util.Scanner;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
+import java.util.HashSet;
+
 
 public class Conversation
 {
 // ----------------------------------
 // Attributes
 // ----------------------------------
-	private static final String	conversationsDir = "ressource/conversations/";
 
-	private String				conversationName;
-	private LinkedList<User>	userList;
-	private LinkedList<String>	history;
+	private String conversationName;
+	private HashSet<String> userSet;
+	private LinkedList<String> history;
 	private final Lock lock = new ReentrantLock();
 
 // ----------------------------------
 // Builder
 // ----------------------------------
-	public Conversation(String conversationName)
+	public Conversation(String conversationName, String userName)
 	{
-		this.conversationName	= new String(conversationName);
-		this.userList			= new LinkedList<User>();
-		this.history			= new LinkedList<String>();
+		this.conversationName = new String(conversationName);
+		this.userSet = new HashSet<String>();
+		this.userSet.add(userName);
+		this.history = new LinkedList<String>();
 	}
 
-	public Conversation(String conversationName, Scanner in)
+	public Conversation(String conversationName, String userName, Scanner in)
 	{
-		this.conversationName	= new String(conversationName);
-		this.userList			= new LinkedList<User>();
-		this.history			= new LinkedList<String>();
+		this.conversationName = new String(conversationName);
+		this.userSet = new HashSet<String>();
+		this.userSet.add(userName);
+		this.history = new LinkedList<String>();
 		this.addHistory(in);
 	}
 
@@ -46,18 +49,23 @@ public class Conversation
 		return new String(this.conversationName);
 	}
 
-	public LinkedList<User>	getUserNameList() {
-		return new LinkedList<User>(this.userList);
+	public HashSet<String>	getUserName() {
+		return new HashSet<String>(this.userSet);
 	}
 
 // ----------------------------------
 // Local methods
 // ----------------------------------
-	public void	addUser(User user) {
-		this.userList.add(user);
+	public void	addUser(String userName) {
+		if (!this.isUserInConversation(userName)) {
+			this.userSet.add(userName);
+		}
 	}
 
-	public void	addMessage(String message) {
+	public void	addMessage(String message, String userName) {
+		if (!this.isUserInConversation(userName)) {
+			return;
+		}
 		lock.lock();
 		BufferedWriter out;
 		try {
@@ -79,6 +87,10 @@ public class Conversation
             this.history.add(in.nextLine());
         }
         in.close();
+	}
+
+	public boolean isUserInConversation(String userName) {
+		return this.userSet.contains(userName);
 	}
 
 }

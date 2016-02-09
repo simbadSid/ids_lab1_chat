@@ -32,7 +32,7 @@ public class ChatServer
 			System.out.println(serverImpl.CreateConversation("User1", "ConvName"));
 			System.out.println(serverImpl.CreateUser("User2", "Pass2"));
 			System.out.println(serverImpl.JoinConversation("User2", "ConvName"));
-			System.out.println(serverImpl.AddMessage("Message1", "ConvName"));
+			System.out.println(serverImpl.AddMessage("Message1", "ConvName", "User1"));
 			//AddMessage
 			//ChatServerImpl	server_stub	= (ChatServerImpl) UnicastRemoteObject.exportObject(serverImpl, remoteServerPort);
 			//Registry			registry	= LocateRegistry.getRegistry();

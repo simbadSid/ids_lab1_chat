@@ -50,10 +50,10 @@ public class ChatServerImpl implements ChatServerInterface
 		try {
 			in = new Scanner(new File(fileName));
 		} catch (FileNotFoundException e) {
-			this.conversationSet.put(convName, new Conversation(convName));
+			this.conversationSet.put(convName, new Conversation(convName, userName));
 			return ChatServerAnswer.SERVER_OK;
 		}
-		this.conversationSet.put(convName, new Conversation(convName, in));
+		this.conversationSet.put(convName, new Conversation(convName, userName, in));
 
 		return ChatServerAnswer.SERVER_OK;
 	}
@@ -71,16 +71,20 @@ public class ChatServerImpl implements ChatServerInterface
 		User			user	= this.userSet.get(userName);
 
 		user.addConversation(convName);
-		conv.addUser(user);
+		conv.addUser(user.getUserName());
 		return ChatServerAnswer.SERVER_OK;
 	}
 
 	@Override
-	public ChatServerAnswer AddMessage(String message, String convName) {
+	public ChatServerAnswer AddMessage(String message, String convName, String userName) {
 		if (!this.conversationSet.containsKey(convName)) {
 			return ChatServerAnswer.SERVER_CONVERSATION_UNKNOWN;
 		}
-		this.conversationSet.get(convName).addMessage(message);
+		Conversation currConv = this.conversationSet.get(convName);
+		if (!currConv.isUserInConversation(userName)) {
+			return ChatServerAnswer.SERVER_USER_UNKNOWN;
+		}
+		currConv.addMessage(message, userName);
 		return ChatServerAnswer.SERVER_OK;
 	}
 }
