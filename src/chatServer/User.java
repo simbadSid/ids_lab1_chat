@@ -1,8 +1,10 @@
 package chatServer;
 
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.OutputStreamWriter;
 import java.util.LinkedList;
-
-
 
 
 public class User
@@ -10,31 +12,51 @@ public class User
 // ----------------------------------
 // Attributes
 // ----------------------------------
+	public static final String	userConversationsDir = "resource/userConversations/";
+
 	private String				userName;
+	private String				password;
 	private LinkedList<String>	converstionNameList;
-	private String				userConversationsDir;
 
 // ----------------------------------
 // Builder
 // ----------------------------------
-	public User(String userName)
+	public User(String userName, String password)
 	{
 		this.userName				= new String(userName);
+		this.password				= new String(password);
 		this.converstionNameList	= new LinkedList<String>();
+
+		String dirName = userConversationsDir + userName;			// Create the dir for conversation
+		File dir = new File(dirName);
+		boolean test = dir.mkdir();
+		if (!test) throw new RuntimeException("Failed to create the directory " + dirName);
 	}
 
 // ----------------------------------
 // Getter/Setter
 // ----------------------------------
 	public String				getUserName()			{return new String(this.userName);}
+	public String				getPasswordName()		{return new String(this.password);}
 	public LinkedList<String>	converstionNameList()	{return new LinkedList<String>(this.converstionNameList);}
 
 // ----------------------------------
 // Local methods
 // ----------------------------------
-	public void createUserConversationDir()
+	public void addConversation(String conversationName)
 	{
-asdflj
-//TODO		
+		String fileName = userConversationsDir + userName + "/" + conversationName;
+
+		this.converstionNameList.add(new String(conversationName));
+		try
+		{
+			new BufferedWriter(new OutputStreamWriter(new FileOutputStream(fileName), "utf-8"));
+		}
+		catch(Exception e)
+		{
+			e.printStackTrace();
+			System.exit(0);
+		}
 	}
+
 }
