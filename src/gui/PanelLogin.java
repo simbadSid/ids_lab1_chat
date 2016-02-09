@@ -15,6 +15,11 @@ import javax.swing.text.SimpleAttributeSet;
 import javax.swing.text.StyleConstants;
 import javax.swing.text.StyledDocument;
 
+import chatClient.ActionListenerCancel;
+import chatClient.ActionListenerCreate;
+import chatClient.ActionListenerLogin;
+import chatServer.ChatServerInterface;
+
 
 
 
@@ -60,12 +65,15 @@ public class PanelLogin extends JPanel
 	private JButton		creatAccountButton;
 	private JButton		cancelButton;
 
+	private ChatServerInterface	server;
+
 // --------------------------------------------
 // Builder:
 // --------------------------------------------
-	public PanelLogin()
+	public PanelLogin(ChatServerInterface server)
 	{
 		super();
+		this.server				= server;
 		JTextPane topPanel		= new JTextPane();
 		JPanel bottomPanel		= new JPanel();
 		JPanel buttonPanel		= new JPanel();
@@ -114,14 +122,15 @@ public class PanelLogin extends JPanel
 			}
 		}
 
-		buttonPanel.add(loginButton);															// Init the button
+		buttonPanel.add(loginButton);													// Init the button
 		buttonPanel.add(creatAccountButton);
 		buttonPanel.add(cancelButton);
-		this.loginButton.addActionListener(new ActionPerformer(this, "TODO"));
-		this.creatAccountButton.addActionListener(new ActionPerformer(this, "TODO"));
-		this.cancelButton.addActionListener(new ActionPerformer(this, "TODO"));
 
-		this.setLayout(new GridLayout(1, 1));												// Init the frame
+		this.loginButton.addActionListener(new ActionListenerLogin(this, this.server));
+		this.creatAccountButton.addActionListener(new ActionListenerCreate(this, this.server));
+		this.cancelButton.addActionListener(new ActionListenerCancel());
+
+		this.setLayout(new GridLayout(1, 1));											// Init the frame
 		this.frameOrganizerTop = new JSplitPane(JSplitPane.VERTICAL_SPLIT, true, topPanel, bottomPanel);
 		this.frameOrganizerMain= new JSplitPane(JSplitPane.VERTICAL_SPLIT, true, frameOrganizerTop, buttonPanel);
 		this.frameOrganizerMain.setDividerSize(3);
@@ -142,5 +151,15 @@ public class PanelLogin extends JPanel
 		super.setSize(width, height);
 		this.frameOrganizerTop.setDividerLocation((int) dividerHeightTop);
 		this.frameOrganizerMain.setDividerLocation((int) dividerHeightMain);
+	}
+
+	public String getUserName()
+	{
+		return this.nameTextField.getText();
+	}
+
+	public String getPassword()
+	{
+		return this.passwordTextField.getText();
 	}
 }

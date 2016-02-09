@@ -9,6 +9,8 @@ import java.awt.event.ComponentListener;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 
+import chatServer.ChatServerInterface;
+
 
 
 
@@ -34,16 +36,18 @@ public class GuiController implements ComponentListener
 
 	private JFrame				frame;
 	private JPanel				currentPan;
+	private ChatServerInterface	server;
 
 // ----------------------------------
 // Builder
 // ----------------------------------
-	public GuiController()
+	public GuiController(ChatServerInterface server)
 	{
-		this.loginPanel	= new PanelLogin();
-		this.chatPanel	= new PanelChat();
-
 		this.frame		= new JFrame(FRAME_NAME);
+		this.server		= server;
+
+		this.loginPanel	= new PanelLogin(server);
+		this.chatPanel	= new PanelChat(server);
 
 		this.frame.setSize(FRAME_WIDTH_DEFAULT, FRAME_HEIGHT_DEFAULT);
 		this.frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);

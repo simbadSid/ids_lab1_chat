@@ -54,6 +54,7 @@ public class ChatServerImpl implements ChatServerInterface
 			return ChatServerAnswer.SERVER_OK;
 		}
 		this.conversationSet.put(fileName, new Conversation(convName, in));
+
 		return ChatServerAnswer.SERVER_OK;
 	}
 

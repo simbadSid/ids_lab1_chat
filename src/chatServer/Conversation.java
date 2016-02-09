@@ -3,6 +3,7 @@ package chatServer;
 import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.File;
 import java.util.LinkedList;
 import java.util.Scanner;
 import java.util.concurrent.locks.Lock;
@@ -13,6 +14,8 @@ public class Conversation
 // ----------------------------------
 // Attributes
 // ----------------------------------
+	private static final String	conversationsDir = "ressource/conversations/";
+
 	private String				conversationName;
 	private LinkedList<User>	userList;
 	private LinkedList<String>	history;
