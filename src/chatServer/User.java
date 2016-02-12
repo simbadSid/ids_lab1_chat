@@ -1,9 +1,5 @@
 package chatServer;
 
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.OutputStreamWriter;
 import java.util.LinkedList;
 
 
@@ -40,7 +36,7 @@ public class User
 // ----------------------------------
 	public void addConversation(String conversationName)
 	{
-		String fileName = userConversationsDir + userName + "/" + conversationName;
+/*		String fileName = userConversationsDir + userName + "/" + conversationName;
 
 		this.converstionNameList.add(new String(conversationName));
 		try
@@ -52,6 +48,7 @@ public class User
 			e.printStackTrace();
 			System.exit(0);
 		}
+*/
 	}
 
 }

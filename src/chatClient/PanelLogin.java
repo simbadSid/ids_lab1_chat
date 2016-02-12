@@ -1,6 +1,4 @@
-package gui;
-
-import general.ActionPerformer;
+package chatClient;
 
 import java.awt.Color;
 import java.awt.Font;
@@ -15,9 +13,6 @@ import javax.swing.text.SimpleAttributeSet;
 import javax.swing.text.StyleConstants;
 import javax.swing.text.StyledDocument;
 
-import chatClient.ActionListenerCancel;
-import chatClient.ActionListenerCreate;
-import chatClient.ActionListenerLogin;
 import chatServer.ChatServerInterface;
 
 
@@ -143,10 +138,11 @@ public class PanelLogin extends JPanel
 // --------------------------------------------
 // Local methods:
 // --------------------------------------------
+	@Override
 	public void setSize(int width, int height)
 	{
-		double dividerHeightTop		= PARTITION_HEIGHT_TOP * (double)height;
-		double dividerHeightMain	= PARTITION_HEIGHT_MAIN * (double)height;
+		double dividerHeightTop		= PARTITION_HEIGHT_TOP * height;
+		double dividerHeightMain	= PARTITION_HEIGHT_MAIN * height;
 
 		super.setSize(width, height);
 		this.frameOrganizerTop.setDividerLocation((int) dividerHeightTop);

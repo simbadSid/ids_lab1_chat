@@ -1,6 +1,5 @@
 package chatClient;
 
-import gui.PanelLogin;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
@@ -31,6 +30,7 @@ public class ActionListenerLogin implements ActionListener
 // ------------------------------------------
 // Local methods:
 // ------------------------------------------
+	@Override
 	public void actionPerformed(ActionEvent arg0)
 	{
 		String userName	= panelLogin.getUserName();

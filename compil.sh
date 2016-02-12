@@ -1,25 +1,40 @@
 #!/bin/sh
 
-rm -r -f classes/*
+rm -r -f bin/*
 rm -r -f lib/*
-mkdir classes/chatServer
-mkdir classes/chatClient
+#mkdir lib
+
+
+
 
 currentDir=`pwd`
 
 
 
 
+javac -d bin -classpath .:bin src/chatServer/*
+javac -d bin -classpath .:bin src/chatClient/*
+#javac -d bin -classpath .:bin src/gui/*
 
-javac -d classes -classpath .:classes/chatServer src/chatServer/ChatServerInterface.java
-jar cvf lib/ChatServerInterface.jar classes/chatServer/ChatServerInterface.class
+# compile the Interfaces
 
-javac -d classes -classpath .:classes/chatServer/* src/chatServer/ChatServerImpl.java
-jar cvf lib/ChatServerImpl.jar classes/chatServer/ChatServerImpl.class
+javac -d bin -classpath .:bin src/chatServer/ChatServerInterface.java
+jar cvf lib/ChatServerInterface.jar bin/chatServer/ChatServerInterface.class
 
-javac -d classes -cp .:classes/chatServer:lib/ChatServerInterface.jar:lib/ChatServerImpl.jar $currentDir/src/chatServer/ChatServer.java
+javac -d bin -classpath .:bin src/chatClient/ChatClientInterface.java
+jar cvf lib/ChatClientInterface.jar bin/chatClient/ChatClientInterface.class
 
-javac -d classes -cp .:classes:lib/ChatServerInterface.jar $currentDir/src/ChatClient.java
+# compile the bin
+#javac -d bin -classpath .:bin src/chatServer/*
+
+# Generate the corresponding jar
+jar cvf lib/ChatServerImpl.jar bin/chatServer/ChatServerImpl.class
+jar cvf lib/ChatClientImpl.jar bin/chatClient/ChatClientImpl.class
+
+# compile the main classe for the server
+javac -d bin -cp lib/ChatServerInterface.jar:lib/ChatServerImpl.jar:bin $currentDir/src/chatServer/ChatServer.java
+javac -d bin -cp lib/ChatClientInterface.jar:lib/ChatClientImpl.jar:bin $currentDir/src/chatClient/ChatClient.java
+
 
 
 

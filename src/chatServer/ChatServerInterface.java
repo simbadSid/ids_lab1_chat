@@ -2,6 +2,7 @@ package chatServer;
 
 import java.rmi.Remote;
 import java.rmi.RemoteException;
+import chatServer.ChatServerAnswer;
 
 
 

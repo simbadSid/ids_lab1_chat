@@ -1,8 +1,5 @@
-package gui;
+package chatClient;
 
-import java.awt.Component;
-import java.awt.GridLayout;
-import java.awt.Point;
 import java.awt.event.ComponentEvent;
 import java.awt.event.ComponentListener;
 
@@ -81,6 +78,7 @@ public class GuiController implements ComponentListener
 		this.currentPan.setSize(this.frame.getWidth(), this.frame.getHeight());
 	}
 
+	@Override
 	public void componentResized(ComponentEvent e)
 	{
 		int width 	= e.getComponent().getWidth();
@@ -88,7 +86,10 @@ public class GuiController implements ComponentListener
 		this.currentPan.setSize(width, height);
 	}
 
+	@Override
 	public void componentHidden(ComponentEvent arg0){}
+	@Override
 	public void componentMoved(ComponentEvent arg0) {}
+	@Override
 	public void componentShown(ComponentEvent arg0)	{}
 }

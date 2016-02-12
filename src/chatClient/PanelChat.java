@@ -1,11 +1,8 @@
-package gui;
+package chatClient;
 
-import general.ActionPerformer;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.GridLayout;
-import java.util.Locale;
-
 import javax.swing.JButton;
 import javax.swing.JPanel;
 import javax.swing.JSplitPane;
@@ -14,7 +11,6 @@ import javax.swing.text.SimpleAttributeSet;
 import javax.swing.text.StyleConstants;
 import javax.swing.text.StyledDocument;
 
-import chatClient.ActionListenerSend;
 import chatServer.ChatServerInterface;
 
 
@@ -175,13 +171,14 @@ public class PanelChat extends JPanel
 // --------------------------------------------
 // Local Methods:
 // --------------------------------------------
+	@Override
 	public void setSize(int width, int height)
 	{
-		double dividerHeightTL		= PARTITION_HEIGHT_TOP_LEFT		* (double)height;
-		double dividerHeightML		= PARTITION_HEIGHT_MIDDLE_LEFT	* (double)height;
-		double dividerHeightTR		= PARTITION_HEIGHT_TOP_RIGHT	* (double)height;
-		double dividerHeightMR		= PARTITION_HEIGHT_MIDDLE_RIGHT	* (double)height;
-		double dividerWidthMain		= PARTITION_WIDTH				* (double)width;
+		double dividerHeightTL		= PARTITION_HEIGHT_TOP_LEFT		* height;
+		double dividerHeightML		= PARTITION_HEIGHT_MIDDLE_LEFT	* height;
+		double dividerHeightTR		= PARTITION_HEIGHT_TOP_RIGHT	* height;
+		double dividerHeightMR		= PARTITION_HEIGHT_MIDDLE_RIGHT	* height;
+		double dividerWidthMain		= PARTITION_WIDTH				* width;
 		double dividerWidthToSend	= PARTITION_WIDTH_TO_SEND		* dividerWidthMain;
 
 		super.setSize(width, height);

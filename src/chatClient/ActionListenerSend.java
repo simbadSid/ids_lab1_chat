@@ -1,6 +1,5 @@
 package chatClient;
 
-import gui.PanelChat;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -32,6 +31,7 @@ public class ActionListenerSend implements ActionListener
 // ------------------------------------------
 // Local methods:
 // ------------------------------------------
+	@Override
 	public void actionPerformed(ActionEvent arg0)
 	{
 		String message		= panelChat.getWrittenMessage();

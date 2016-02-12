@@ -36,6 +36,7 @@ public class ActionPerformer implements ActionListener
 // --------------------------------------------
 // ActionListener interface
 // --------------------------------------------
+	@Override
 	public void actionPerformed(ActionEvent e)
 	{
 		Class<?> targetClass = this.targetObject.getClass();

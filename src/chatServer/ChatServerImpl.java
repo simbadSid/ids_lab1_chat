@@ -9,6 +9,8 @@ import java.util.HashMap;
 
 
 
+
+
 public class ChatServerImpl implements ChatServerInterface
 {
 // ----------------------------------
@@ -38,6 +40,7 @@ public class ChatServerImpl implements ChatServerInterface
 		return ChatServerAnswer.SERVER_OK;
 	}
 
+	@Override
 	public ChatServerAnswer CreateConversation(String userName, String convName) throws RemoteException
 	{
 		if (!this.userSet.containsKey(userName))		return ChatServerAnswer.SERVER_USER_UNKNOWN;
@@ -63,5 +66,20 @@ public class ChatServerImpl implements ChatServerInterface
 		
 throw new RuntimeException("Not implelented yet");
 	}
+
+	@Override
+	public ChatServerAnswer LoginUser(String userName, String password)
+			throws RemoteException {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public ChatServerAnswer SendMessage(String userName, String convName,
+			String message) throws RemoteException {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
 
 }
