@@ -40,7 +40,7 @@ public class ActionListenerSend implements ActionListener
 
 		try
 		{
-			ChatServerAnswer answer = server.SendMessage(userName, conversation, message);
+			ChatServerAnswer answer = server.AddMessage(message, conversation, userName);
 			if (answer != ChatServerAnswer.SERVER_OK) throw new Exception();
 		}
 		catch (Exception e)

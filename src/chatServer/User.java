@@ -3,13 +3,13 @@ package chatServer;
 import java.util.LinkedList;
 
 
-
-
 public class User
 {
 // ----------------------------------
 // Attributes
 // ----------------------------------
+	public static final String	userConversationsDir = "resource/";
+
 	private String				userName;
 	private String				password;
 	private LinkedList<String>	converstionNameList;
@@ -36,19 +36,7 @@ public class User
 // ----------------------------------
 	public void addConversation(String conversationName)
 	{
-/*		String fileName = userConversationsDir + userName + "/" + conversationName;
-
 		this.converstionNameList.add(new String(conversationName));
-		try
-		{
-			new BufferedWriter(new OutputStreamWriter(new FileOutputStream(fileName), "utf-8"));
-		}
-		catch(Exception e)
-		{
-			e.printStackTrace();
-			System.exit(0);
-		}
-*/
 	}
 
 }

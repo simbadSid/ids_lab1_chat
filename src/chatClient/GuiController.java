@@ -33,7 +33,7 @@ public class GuiController implements ComponentListener
 
 	private JFrame				frame;
 	private JPanel				currentPan;
-	private ChatServerInterface	server;
+//	private ChatServerInterface	server;
 
 // ----------------------------------
 // Builder
@@ -41,8 +41,6 @@ public class GuiController implements ComponentListener
 	public GuiController(ChatServerInterface server)
 	{
 		this.frame		= new JFrame(FRAME_NAME);
-		this.server		= server;
-
 		this.loginPanel	= new PanelLogin(server);
 		this.chatPanel	= new PanelChat(server);
 

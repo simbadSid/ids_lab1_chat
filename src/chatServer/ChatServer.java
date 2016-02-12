@@ -32,6 +32,13 @@ public class ChatServer
 			Registry			registry	= LocateRegistry.getRegistry();
 			registry.bind(remoteObjectReference, server_stub);
 
+/*
+			System.out.println(serverImpl.CreateUser("User1", "Pass1"));
+			System.out.println(serverImpl.CreateConversation("User1", "ConvName"));
+			System.out.println(serverImpl.CreateUser("User2", "Pass2"));
+			System.out.println(serverImpl.JoinConversation("User2", "ConvName"));
+			System.out.println(serverImpl.AddMessage("Message1", "ConvName", "User1"));
+*/
 			System.out.println("Server ready");
 		}
 		catch(Exception e)
