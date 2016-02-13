@@ -11,7 +11,7 @@ import chatServer.ChatServerInterface;
 
 
 
-public class ChatClient implements Runnable
+public class ChatClient
 {
 // ----------------------------------
 // Attributes
@@ -23,32 +23,52 @@ public class ChatClient implements Runnable
 	public static final String	PARAMETER_HOST_IP				= "-rhip";
 	public static final int		NBR_PARAMETER					= 2;
 
-	private String				remoteHostReference;
-	private String				remoteHostIp;
-	private ChatServerInterface	server;
-	private GuiController		gui;
-
 // ----------------------------------
 // Main methods
 // ----------------------------------
-	@Override
-	public void run()
-	{
-		// Init the graphical interface
-		this.gui			= new GuiController(server);
-		this.gui.setCurrentPanel(GuiController.PANEL_CHAT_ID);
-	}
-
 	public static void main(String[] args)
 	{
-		ChatClient chatClient = new ChatClient();
-		ChatServerInterface chatServer;
+		String remoteHostReference	= null;
+		String remoteHostIp			= null;
 
-		chatClient.parseParameters(args);
-		chatServer = chatClient.initConnectionWithServer();
-		if (chatServer == null) return;
-		chatClient.server = chatServer;
-    	SwingUtilities.invokeLater(chatClient);
+		// Parse parameters
+		if (args.length > NBR_PARAMETER) printUsage(true);
+		for (int i=0; i<args.length; i++)
+		{
+			if		(args[i].equals(PARAMETER_HOST_REFERENCE))	remoteHostReference = args[i+1];
+			else if (args[i].equals(PARAMETER_HOST_IP))			remoteHostIp		= args[i+1];
+			else printUsage(true);
+			i ++;
+		}
+
+		if (remoteHostReference == null)remoteHostReference	= DEFAULT_REMOTE_HOST_REFERENCE;
+		if (remoteHostIp == null)		remoteHostIp		= DEFAULT_REMOTE_HOST_IP;
+
+		// Init connection with server
+		ChatServerInterface server	= initConnectionWithServer(remoteHostReference, remoteHostIp);
+		if (server == null) return;
+
+		ChatClientImpl client = new ChatClientImpl(server);
+    	SwingUtilities.invokeLater(client);
+	}
+
+	private static ChatServerInterface initConnectionWithServer(String remoteHostReference, String remoteHostIp)
+	{
+		Registry registry = null;
+		ChatServerInterface	serverInterface = null;
+
+		try
+		{
+			// Get remote object reference
+			registry		= LocateRegistry.getRegistry(remoteHostIp);
+			serverInterface	= (ChatServerInterface)registry.lookup(remoteHostReference);
+		}
+		catch(Exception e)
+		{
+			e.printStackTrace();
+			return null;
+		}
+		return serverInterface;
 	}
 
 	private static void printUsage(boolean exit)
@@ -60,37 +80,4 @@ public class ChatClient implements Runnable
 		if (exit) System.exit(0);
 	}
 
-	private void parseParameters(String args[])
-	{
-		if (args.length > NBR_PARAMETER) printUsage(true);
-		for (int i=0; i<args.length; i++)
-		{
-			if		(args[i].equals(PARAMETER_HOST_REFERENCE))	remoteHostReference = args[i+1];
-			else if (args[i].equals(PARAMETER_HOST_IP))			remoteHostIp		= args[i+1];
-			else printUsage(true);
-			i ++;
-		}
-
-		if (remoteHostReference == null)	this.remoteHostReference	= DEFAULT_REMOTE_HOST_REFERENCE;
-		if (remoteHostIp == null)			this.remoteHostIp			= DEFAULT_REMOTE_HOST_IP;
-	}
-
-	private ChatServerInterface initConnectionWithServer()
-	{
-		Registry registry = null;
-		ChatServerInterface	serverInterface = null;
-
-		try
-		{
-			// Get remote object reference
-			registry		= LocateRegistry.getRegistry(this.remoteHostIp);
-			serverInterface	= (ChatServerInterface)registry.lookup(this.remoteHostReference);
-		}
-		catch(Exception e)
-		{
-			e.printStackTrace();
-			return null;
-		}
-		return serverInterface;
-	}
 }

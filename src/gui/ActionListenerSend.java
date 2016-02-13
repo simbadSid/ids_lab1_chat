@@ -1,4 +1,5 @@
-package chatClient;
+package gui;
+
 
 
 import java.awt.event.ActionEvent;
@@ -16,16 +17,16 @@ public class ActionListenerSend implements ActionListener
 // ------------------------------------------
 // Attributes:
 // ------------------------------------------
-	private PanelChat			panelChat;
+	private GuiController		gui;
 	private ChatServerInterface	server;
 
 // ------------------------------------------
 // Builder:
 // ------------------------------------------
-	public ActionListenerSend(PanelChat panelChat, ChatServerInterface server)
+	public ActionListenerSend(GuiController gui, ChatServerInterface server)
 	{
-		this.panelChat	= panelChat;
-		this.server		= server;
+		this.gui	= gui;
+		this.server	= server;
 	}
 
 // ------------------------------------------
@@ -34,19 +35,29 @@ public class ActionListenerSend implements ActionListener
 	@Override
 	public void actionPerformed(ActionEvent arg0)
 	{
-		String message		= panelChat.getWrittenMessage();
-		String conversation	= panelChat.getConversationName();
-		String userName		= panelChat.getUserName();
+		String message		= gui.getWrittenMessage();
+		String conversation	= gui.getConversationName();
+		String userName		= gui.getUserName();
+		String title		= "Login error";
+		ChatServerAnswer serverAnswer = null;
 
 		try
 		{
-			ChatServerAnswer answer = server.AddMessage(message, conversation, userName);
-			if (answer != ChatServerAnswer.SERVER_OK) throw new Exception();
+			serverAnswer = server.AddMessage(userName, message, conversation);
 		}
 		catch (Exception e)
 		{
 			e.printStackTrace();
+			this.gui.printConnexionError(title);
+			return;
+		}
+		if (serverAnswer == ChatServerAnswer.SERVER_OK)
+		{
+			this.gui.removeWrittenMessage();
+		}
+		else
+		{
+			this.gui.printServerError(serverAnswer, title);
 		}
 	}
-
 }

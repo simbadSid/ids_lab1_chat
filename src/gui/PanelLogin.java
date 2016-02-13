@@ -1,4 +1,4 @@
-package chatClient;
+package gui;
 
 import java.awt.Color;
 import java.awt.Font;
@@ -6,6 +6,7 @@ import java.awt.GridLayout;
 
 import javax.swing.JButton;
 import javax.swing.JPanel;
+import javax.swing.JPasswordField;
 import javax.swing.JSplitPane;
 import javax.swing.JTextField;
 import javax.swing.JTextPane;
@@ -13,6 +14,7 @@ import javax.swing.text.SimpleAttributeSet;
 import javax.swing.text.StyleConstants;
 import javax.swing.text.StyledDocument;
 
+import chatClient.ChatClientInterface;
 import chatServer.ChatServerInterface;
 
 
@@ -55,7 +57,7 @@ public class PanelLogin extends JPanel
 	private JSplitPane	frameOrganizerTop;
 	private JSplitPane	frameOrganizerMain;
 	private JTextField	nameTextField;
-	private JTextField	passwordTextField;
+	private JPasswordField	passwordTextField;
 	private JButton		loginButton;
 	private JButton		creatAccountButton;
 	private JButton		cancelButton;
@@ -65,7 +67,7 @@ public class PanelLogin extends JPanel
 // --------------------------------------------
 // Builder:
 // --------------------------------------------
-	public PanelLogin(ChatServerInterface server)
+	public PanelLogin(GuiController gui, ChatServerInterface server, ChatClientInterface client)
 	{
 		super();
 		this.server				= server;
@@ -73,8 +75,8 @@ public class PanelLogin extends JPanel
 		JPanel bottomPanel		= new JPanel();
 		JPanel buttonPanel		= new JPanel();
 		this.nameTextField		= new JTextField();
-		this.passwordTextField	= new JTextField();
-		this.loginButton			= new JButton("Login");
+		this.passwordTextField	= new JPasswordField();
+		this.loginButton		= new JButton("Login");
 		this.creatAccountButton	= new JButton("Creat account");
 		this.cancelButton		= new JButton("Cancel");
 		Font topPanelFont		= new Font(TOP_PANEL_FONT_NAME, TOP_PANEL_FONT_TYPE, TOP_PANEL_FONT_SIZE);
@@ -86,6 +88,7 @@ public class PanelLogin extends JPanel
 		topPanel.setText(TOP_PANEL_TEXT);												// Init the top panel
 		topPanel.setFont(topPanelFont);
 		topPanel.setBackground(TOP_PANEL_COLOR);
+		topPanel.setEditable(false);
 		StyledDocument doc = topPanel.getStyledDocument();								//		Center the text
 		SimpleAttributeSet attributs = new SimpleAttributeSet();
 		StyleConstants.setAlignment(attributs, StyleConstants.ALIGN_CENTER);
@@ -96,8 +99,10 @@ public class PanelLogin extends JPanel
 		bottomPanel.setLayout(new GridLayout(BOTTOM_PANEL_NBR_LIGN, BOTTOM_PANEL_NBR_COLOMN));
 		nameLabel.setText(NAME_LABEL_TEXT);
 		nameLabel.setFont(nameLabelFont);
+		nameLabel.setEditable(false);
 		passwordLabel.setText(PASSWORD_LABEL_TEXT);
 		passwordLabel.setFont(passwordLabelFont);
+		passwordLabel.setEditable(false);
 		for (int i=0; i<BOTTOM_PANEL_NBR_LIGN; i++)
 		{
 			if (i == BOTTOM_PANEL_NAME_HEIGHT)
@@ -117,12 +122,13 @@ public class PanelLogin extends JPanel
 			}
 		}
 
-		buttonPanel.add(loginButton);													// Init the button
-		buttonPanel.add(creatAccountButton);
-		buttonPanel.add(cancelButton);
+		buttonPanel.add(this.loginButton);												// Init the button
+		buttonPanel.add(this.creatAccountButton);
+		buttonPanel.add(this.cancelButton);
 
-		this.loginButton.addActionListener(new ActionListenerLogin(this, this.server));
-		this.creatAccountButton.addActionListener(new ActionListenerCreate(this, this.server));
+		ActionListenerLogin loginListener = new ActionListenerLogin(gui, this.server, client);
+		this.loginButton.addActionListener(loginListener);
+		this.creatAccountButton.addActionListener(new ActionListenerCreateUser(gui, this.server, loginListener));
 		this.cancelButton.addActionListener(new ActionListenerCancel());
 
 		this.setLayout(new GridLayout(1, 1));											// Init the frame
@@ -154,6 +160,7 @@ public class PanelLogin extends JPanel
 		return this.nameTextField.getText();
 	}
 
+	@SuppressWarnings("deprecation")
 	public String getPassword()
 	{
 		return this.passwordTextField.getText();

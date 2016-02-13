@@ -12,8 +12,9 @@ currentDir=`pwd`
 
 
 
-javac -d bin -classpath .:bin src/chatServer/*
-javac -d bin -classpath .:bin src/chatClient/*
+javac -d bin -classpath .:bin src/*/*
+#javac -d bin -classpath .:bin src/chatServer/*
+#javac -d bin -classpath .:bin src/chatClient/*
 #javac -d bin -classpath .:bin src/gui/*
 
 # compile the Interfaces

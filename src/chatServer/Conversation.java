@@ -3,6 +3,7 @@ package chatServer;
 import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.Serializable;
 import java.util.LinkedList;
 import java.util.Scanner;
 import java.util.concurrent.locks.Lock;
@@ -10,11 +11,12 @@ import java.util.concurrent.locks.ReentrantLock;
 import java.util.HashSet;
 
 
-public class Conversation
+public class Conversation implements Serializable
 {
 // ----------------------------------
 // Attributes
 // ----------------------------------
+	private static final long	serialVersionUID		= 1L;	// Serial key
 
 	private String conversationName;
 	private HashSet<String> userSet;
@@ -39,6 +41,17 @@ public class Conversation
 		this.userSet.add(userName);
 		this.history = new LinkedList<String>();
 		this.addHistory(in);
+	}
+
+	// Clone methodes
+	public Conversation()
+	{
+	}
+	public void cloneConversation(Conversation conversation)
+	{
+		this.conversationName	= new String(conversation.conversationName);
+		this.userSet			= new HashSet<String>(conversation.userSet);
+		this.history			= new LinkedList<String>(conversation.history);
 	}
 
 // ----------------------------------

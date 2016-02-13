@@ -6,6 +6,8 @@ import java.rmi.RemoteException;
 import java.util.HashMap;
 import java.util.Scanner;
 
+import chatClient.ChatClientInterface;
+
 
 
 
@@ -40,6 +42,44 @@ public class ChatServerImpl implements ChatServerInterface
 	}
 
 	@Override
+	public ChatServerAnswer LoginUser(String userName, String password, ChatClientInterface client) throws RemoteException
+	{
+		User user = this.userSet.get(userName);
+		if (user == null)	return ChatServerAnswer.SERVER_USER_UNKNOWN;
+
+		user.setClient(client);
+		return ChatServerAnswer.SERVER_OK;
+	}
+
+	@Override
+	public String[] getConversations(String userName) throws RemoteException
+	{
+		User user = this.userSet.get(userName);
+		if (user == null)	return null;
+
+		int size = this.conversationSet.keySet().size();
+		String[] res = new String[size];
+		int i = 0;
+		for (String convName: this.conversationSet.keySet())
+		{
+			res[i] = convName;
+			i ++;
+		}
+
+		return res;
+	}
+
+	@Override
+	public ChatServerAnswer LogoutUser(String userName) throws RemoteException
+	{
+		User user = this.userSet.get(userName);
+		if (user == null)	return ChatServerAnswer.SERVER_USER_UNKNOWN;
+
+		user.setClient(null);
+		return ChatServerAnswer.SERVER_OK;
+	}
+
+	@Override
 	public ChatServerAnswer CreateConversation(String userName, String convName) throws RemoteException {
 		if (!this.userSet.containsKey(userName)) {
 			return ChatServerAnswer.SERVER_USER_UNKNOWN;
@@ -61,29 +101,31 @@ public class ChatServerImpl implements ChatServerInterface
 	}
 
 	@Override
-	public ChatServerAnswer JoinConversation(String userName, String convName)  throws RemoteException {
+	public Conversation JoinConversation(String userName, String convName)  throws RemoteException {
 		if (!this.userSet.containsKey(userName)) {
-			return ChatServerAnswer.SERVER_USER_UNKNOWN;
+			return null;
 		}
 		if (!this.conversationSet.containsKey(convName)) {
-			return ChatServerAnswer.SERVER_CONVERSATION_UNKNOWN;
+			return null;
 		}
 
 		Conversation	conv	= this.conversationSet.get(convName);
 		User			user	= this.userSet.get(userName);
 
 		user.addConversation(convName);
+		user.setCurrentConversation(convName);
 		conv.addUser(user.getUserName());
-		return ChatServerAnswer.SERVER_OK;
+
+		for (String otherUser:conv.getUserName())// Update the state of all the participants
+		{
+			if (otherUser.equals(userName)) continue;
+			user = this.userSet.get(otherUser);
+			user.getClient().updateCurrentConversationParticipants(conv);
+		}
+		return conv;
 	}
 
-	@Override
-	public ChatServerAnswer LoginUser(String userName, String password) throws RemoteException
-	{
-		throw new RuntimeException("Not implemented yet");
-	}
-
-	public ChatServerAnswer AddMessage(String message, String convName, String userName) throws RemoteException
+	public ChatServerAnswer AddMessage(String userName, String message, String convName) throws RemoteException
 	{
 		if (!this.conversationSet.containsKey(convName)) {
 			return ChatServerAnswer.SERVER_CONVERSATION_UNKNOWN;

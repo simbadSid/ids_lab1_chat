@@ -1,8 +1,8 @@
-package chatClient;
+package gui;
+
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-
 import chatServer.ChatServerAnswer;
 import chatServer.ChatServerInterface;
 
@@ -10,21 +10,20 @@ import chatServer.ChatServerInterface;
 
 
 
-
-public class ActionListenerCreate implements ActionListener
+public class ActionListenerLogout implements ActionListener
 {
 // ------------------------------------------
 // Attributes:
 // ------------------------------------------
-	private PanelLogin			panelLogin;
+	private GuiController		gui;
 	private ChatServerInterface	server;
 
 // ------------------------------------------
 // Builder:
 // ------------------------------------------
-	public ActionListenerCreate(PanelLogin panelLogin, ChatServerInterface server)
+	public ActionListenerLogout(GuiController gui, ChatServerInterface server)
 	{
-		this.panelLogin	= panelLogin;
+		this.gui		= gui;
 		this.server		= server;
 	}
 
@@ -34,18 +33,28 @@ public class ActionListenerCreate implements ActionListener
 	@Override
 	public void actionPerformed(ActionEvent arg0)
 	{
-		String userName	= panelLogin.getUserName();
-		String password	= panelLogin.getPassword();
+		String userName	= gui.getUserName();
+		String title	= "Logout error";
+		ChatServerAnswer serverAnswer = null;
 
 		try
 		{
-			ChatServerAnswer answer = server.CreateUser(userName, password);
-			if (answer != ChatServerAnswer.SERVER_OK)	throw new Exception();
+			serverAnswer = server.LogoutUser(userName);
 		}
 		catch (Exception e)
 		{
 			e.printStackTrace();
+			this.gui.printConnexionError(title);
+			return;
+		}
+
+		if (serverAnswer == ChatServerAnswer.SERVER_OK)
+		{
+			this.gui.setCurrentPanel(GuiController.PANEL_LOGIN_ID);
+		}
+		else
+		{
+			this.gui.printServerError(serverAnswer, title);
 		}
 	}
-
 }
