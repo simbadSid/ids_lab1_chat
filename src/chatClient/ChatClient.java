@@ -74,8 +74,8 @@ public class ChatClient
 	private static void printUsage(boolean exit)
 	{
 		System.out.println("Usage options:");
-		System.out.printf("\t-%s <Reference of the remote server>", PARAMETER_HOST_REFERENCE);
-		System.out.printf("\t-%s <Ip address of the remote server>", PARAMETER_HOST_IP);
+		System.out.printf("\t-%s <Reference of the remote server>\n", PARAMETER_HOST_REFERENCE);
+		System.out.printf("\t-%s <Ip address of the remote server>\n", PARAMETER_HOST_IP);
 
 		if (exit) System.exit(0);
 	}

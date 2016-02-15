@@ -1,7 +1,6 @@
 package chatServer;
 
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.rmi.RemoteException;
 import java.util.HashMap;
 import java.util.Scanner;
@@ -76,24 +75,48 @@ public class ChatServerImpl implements ChatServerInterface
 		if (user == null)	return ChatServerAnswer.SERVER_USER_UNKNOWN;
 
 		user.setClient(null);
+
+		for (String convName:user.getConverstionNameList())
+		{
+			Conversation conv = this.conversationSet.get(convName);
+			boolean test = conv.removeUser(userName);
+if (!test) System.out.println("******Can't find the user " + userName);
+			for (String otherUserName:conv.getUserName())// Update the state of all the participants
+			{
+				User otherUser = this.userSet.get(otherUserName);
+				if (!otherUser.getCurrentConversation().equals(convName))	continue;
+				otherUser.getClient().updateCurrentConversationParticipants(conv);
+			}
+		}
+
 		return ChatServerAnswer.SERVER_OK;
 	}
 
 	@Override
-	public ChatServerAnswer CreateConversation(String userName, String convName) throws RemoteException {
+	public ChatServerAnswer CreateConversation(String userName, String convName) throws RemoteException
+	{
 		if (!this.userSet.containsKey(userName)) {
 			return ChatServerAnswer.SERVER_USER_UNKNOWN;
 		}
 		if (this.conversationSet.containsKey(convName))	{
 			return ChatServerAnswer.SERVER_CONVERSATION_ALREADY_EXIST;
 		}
-		String fileName = User.userConversationsDir + convName;
+
+		String fileName = Conversation.userConversationsDir + convName;
 		Scanner in;
-		try {
+		try
+		{
+			File dir = new File(fileName);
+			if (!dir.exists())
+			{
+				dir.createNewFile();
+			}
 			in = new Scanner(new File(fileName));
-		} catch (FileNotFoundException e) {
-			this.conversationSet.put(convName, new Conversation(convName, userName));
-			return ChatServerAnswer.SERVER_OK;
+		}
+		catch (Exception e)
+		{
+			e.printStackTrace();
+			return ChatServerAnswer.SERVER_INTERNAL_ERROR;
 		}
 		this.conversationSet.put(convName, new Conversation(convName, userName, in));
 
@@ -135,6 +158,12 @@ public class ChatServerImpl implements ChatServerInterface
 			return ChatServerAnswer.SERVER_USER_UNKNOWN;
 		}
 		currConv.addMessage(message, userName);
+
+		for (String otherUserName:currConv.getUserName())
+		{
+			if (otherUserName.equals(userName)) continue;
+			this.userSet.get(otherUserName).getClient().updateCurrentConversationHistory(currConv);
+		}
 		return ChatServerAnswer.SERVER_OK;
 	}
 }

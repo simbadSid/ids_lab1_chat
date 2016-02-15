@@ -31,7 +31,7 @@ public class ChatServer
 			ChatServerInterface	server_stub	= (ChatServerInterface) UnicastRemoteObject.exportObject(serverImpl, remoteServerPort);
 			Registry			registry	= LocateRegistry.getRegistry();
 // TODO
-System.setProperty("java.rmi.server.hostname","10.2.1.125");
+//System.setProperty("java.rmi.server.hostname","127.0.0.1");
 //TODO
 			registry.bind(remoteObjectReference, server_stub);
 

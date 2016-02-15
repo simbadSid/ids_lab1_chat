@@ -57,7 +57,7 @@ public class ActionListenerSwitchConversation implements ActionListener
 
 		if (convNameList.length == 0)
 		{
-			String msg	= "You have no created conversations";
+			String msg	= "There currently are no conversations";
 			JOptionPane.showMessageDialog(null, msg, title, JOptionPane.INFORMATION_MESSAGE);
 			return;
 		}

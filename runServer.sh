@@ -11,7 +11,7 @@ echo $currentDir
 echo $CLASSPATH
 echo "======================="
 
-java -cp $CLASSPATH chatServer.ChatServer
+java -cp $CLASSPATH chatServer.ChatServer 
 
 
 
