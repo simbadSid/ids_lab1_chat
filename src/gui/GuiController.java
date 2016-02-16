@@ -46,6 +46,7 @@ public class GuiController implements ComponentListener, Serializable
 		this.frame		= new JFrame(FRAME_NAME);
 		this.loginPanel	= new PanelLogin(this, server, client);
 		this.chatPanel	= new PanelChat(this, server);
+		this.currentPan = loginPanel;
 
 		this.frame.setSize(FRAME_WIDTH_DEFAULT, FRAME_HEIGHT_DEFAULT);
 		this.frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -72,9 +73,24 @@ public class GuiController implements ComponentListener, Serializable
 		if (this.currentPan != this.chatPanel) return;
 		this.chatPanel.setCuurentConversation(conv);
 	}
+
 	public void removeWrittenMessage()
 	{
 		this.chatPanel.removeWrittenMessage();
+	}
+
+	public void addExchangedMessage(String userName, String message)
+	{
+		if (this.currentPan != this.chatPanel) return;
+
+		this.chatPanel.addExchangedMessage(userName, message);
+	}
+
+	public void addExchangedMessage(Conversation conv)
+	{
+		if (this.currentPan != this.chatPanel) return;
+
+		this.chatPanel.addExchangedMessage(conv);
 	}
 
 // ----------------------------------
@@ -169,5 +185,4 @@ public class GuiController implements ComponentListener, Serializable
 	public void componentMoved(ComponentEvent arg0) {}
 	@Override
 	public void componentShown(ComponentEvent arg0)	{}
-
 }

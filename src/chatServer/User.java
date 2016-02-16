@@ -10,8 +10,6 @@ public class User
 // ----------------------------------
 // Attributes
 // ----------------------------------
-	public static final String	userConversationsDir = "resource/";
-
 	private String				userName;
 	private String				password;
 	private ChatClientInterface	client;

@@ -54,6 +54,7 @@ public class ActionListenerSend implements ActionListener
 		if (serverAnswer == ChatServerAnswer.SERVER_OK)
 		{
 			this.gui.removeWrittenMessage();
+			this.gui.addExchangedMessage(userName, message);
 		}
 		else
 		{

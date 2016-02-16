@@ -11,5 +11,5 @@ echo $currentDir
 echo $CLASSPATH
 echo "======================="
 
-java chatClient.ChatClient
+java chatClient.ChatClient $*
 

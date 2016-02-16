@@ -3,6 +3,8 @@ package gui;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.GridLayout;
+import java.util.LinkedList;
+
 import javax.swing.JButton;
 import javax.swing.JPanel;
 import javax.swing.JSplitPane;
@@ -69,6 +71,7 @@ public class PanelChat extends JPanel
 
 	private static final String	PARTICIPANTS_OVEROLD			= "...";
 	private static final String	PARTICIPANTS_HEADER				= "-> ";
+	private static final String	CHAT_HISTORY_SEPARATOR			= "\n-------------------\n";
 
 	private final static double	PARTITION_HEIGHT_TOP_LEFT		= 1./10.;
 	private final static double	PARTITION_HEIGHT_MIDDLE_LEFT	= 8.5/10.;
@@ -147,11 +150,12 @@ public class PanelChat extends JPanel
 		this.conversationNamePanel.setEditable(false);
 		this.conversationNamePanel.setBackground(TOP_RIGHT_PANEL_COLOR);
 
+		this.conversationHistoryPanel.setEditable(false);
 		this.conversationHistoryPanel.setFont(middleLeftPanelFont);							// Init the middle left panel
 		this.conversationHistoryPanel.setBackground(MIDDLE_LEFT_PANEL_COLOR);
 		StyledDocument docMiddleLeft = this.conversationHistoryPanel.getStyledDocument();	//		Center the text
 		SimpleAttributeSet attributsML = new SimpleAttributeSet();
-		StyleConstants.setAlignment(attributsML, StyleConstants.ALIGN_CENTER);
+//		StyleConstants.setAlignment(attributsML, StyleConstants.ALIGN_CENTER);
 		StyleConstants.setForeground(attributsML, MIDDLE_LEFT_PANEL_TEXT_COLOR);
 		docMiddleLeft.setParagraphAttributes(0, docMiddleLeft.getLength(), attributsML, false);
 		middleLeftPanel.setLayout(new GridLayout(1, 1));
@@ -248,6 +252,7 @@ public class PanelChat extends JPanel
 
 	public void setCuurentConversation(String convName, String currentParticipant)
 	{
+		this.conversationHistoryPanel.setText("");
 		this.conversationNamePanel.setText(convName);
 		this.conversationParticipantPanel[0].setText(PARTICIPANTS_HEADER + currentParticipant);
 		for (int j=1; j<conversationParticipantPanel.length; j++)
@@ -258,6 +263,11 @@ public class PanelChat extends JPanel
 
 	public void setCuurentConversation(Conversation conv)
 	{
+		String allMessages = "";
+		for (String message : conv.getConversationHistory()) {
+			allMessages += message + "\n";
+		}
+		this.conversationHistoryPanel.setText(allMessages);
 		this.conversationNamePanel.setText(conv.getConversationName());
 
 		int nbrUser = conv.getUserName().size();
@@ -280,5 +290,31 @@ public class PanelChat extends JPanel
 		{
 			this.conversationParticipantPanel[i].setText("");
 		}
+	}
+
+	public void addExchangedMessage(String userName, String message)
+	{
+		String text = this.conversationHistoryPanel.getText();
+
+		//text += CHAT_HISTORY_SEPARATOR;
+		text += userName + ":\n";
+		text += message;
+		this.conversationHistoryPanel.setText(text);
+	}
+
+	public void addExchangedMessage(Conversation conv)
+	{
+		String text = "";
+
+		for (int i=0; i<conv.getConversationHistory().size(); i++)
+		{
+			String userName = conv.getConversationHistory().get(i);
+			i ++;
+			String message = conv.getConversationHistory().get(i);
+			//text += CHAT_HISTORY_SEPARATOR;
+			text += userName + ":\n";
+			text += message;
+		}
+		this.conversationHistoryPanel.setText(text);
 	}
 }

@@ -16,7 +16,9 @@ public class Conversation implements Serializable
 // ----------------------------------
 // Attributes
 // ----------------------------------
-	private static final long	serialVersionUID		= 1L;	// Serial key
+	private static final long	serialVersionUID	= 1L;	// Serial key
+	public static final String	userConversationsDir= "resource/";
+	public static final String	END_OF_MESSAGE		= "#/#\n";
 
 	private String conversationName;
 	private HashSet<String> userSet;
@@ -65,6 +67,10 @@ public class Conversation implements Serializable
 		return new HashSet<String>(this.userSet);
 	}
 
+	public LinkedList<String> getConversationHistory() {
+		return new LinkedList<String>(this.history);
+	}
+
 // ----------------------------------
 // Local methods
 // ----------------------------------
@@ -82,22 +88,36 @@ public class Conversation implements Serializable
 		BufferedWriter out;
 		try {
 			out = new BufferedWriter(
-				new FileWriter(User.userConversationsDir + this.conversationName, true)
+				new FileWriter(userConversationsDir + this.conversationName, true)
 			);
-			out.write(message);
+			out.write(userName + " " + message + " " + END_OF_MESSAGE);
 			out.close();
 		} catch (IOException e) {
 			lock.unlock();
 			e.printStackTrace();
 		}
+		this.history.add(userName);
 		this.history.add(message);
 		lock.unlock();
 	}
 
 	public void addHistory(Scanner in) {
-		while (in.hasNextLine()) {
-            this.history.add(in.nextLine());
-        }
+		
+		while (in.hasNext())
+		{
+			String userName = in.next();
+			String message = "";
+			while (in.hasNext()) {
+				String str = in.next();
+				if (str.equals(END_OF_MESSAGE))
+				{
+					break;
+				}
+				message += str + " ";
+	        }
+            this.history.add(userName);
+            this.history.add(message);
+		}
         in.close();
 	}
 
@@ -105,4 +125,8 @@ public class Conversation implements Serializable
 		return this.userSet.contains(userName);
 	}
 
+	public boolean removeUser(String userName)
+	{
+		return this.userSet.remove(userName);
+	}
 }
