@@ -1,44 +1,18 @@
-#!/bin/sh
+﻿#!/usr/bin/env bash
 
-rm -r -f bin/*
-rm -r -f lib/*
-#mkdir lib
+mkdir -p bin lib
+rm -rf bin/*
+rm -rf lib/*
 
+# Compile classes.
+javac -d bin -classpath src src/*/*.java
 
-
-
-currentDir=`pwd`
-
-
-
-
-javac -d bin -classpath .:bin src/*/*
-#javac -d bin -classpath .:bin src/chatServer/*
-#javac -d bin -classpath .:bin src/chatClient/*
-#javac -d bin -classpath .:bin src/gui/*
-
-# compile the Interfaces
-
-javac -d bin -classpath .:bin src/chatServer/ChatServerInterface.java
+# Pack interfaces.
 jar cvf lib/ChatServerInterface.jar bin/chatServer/ChatServerInterface.class
-
-javac -d bin -classpath .:bin src/chatClient/ChatClientInterface.java
 jar cvf lib/ChatClientInterface.jar bin/chatClient/ChatClientInterface.class
-
-# compile the bin
-#javac -d bin -classpath .:bin src/chatServer/*
-
-# Generate the corresponding jar
 jar cvf lib/ChatServerImpl.jar bin/chatServer/ChatServerImpl.class
 jar cvf lib/ChatClientImpl.jar bin/chatClient/ChatClientImpl.class
 
-# compile the main classe for the server
-javac -d bin -cp lib/ChatServerInterface.jar:lib/ChatServerImpl.jar:bin $currentDir/src/chatServer/ChatServer.java
-javac -d bin -cp lib/ChatClientInterface.jar:lib/ChatClientImpl.jar:bin $currentDir/src/chatClient/ChatClient.java
-
-
-
-
-
-
-
+# Compile the main classes for server and client.
+javac -d bin -classpath src:lib/*.jar src/chatServer/ChatServer.java
+javac -d bin -classpath src:lib/*.jar src/chatClient/ChatClient.java

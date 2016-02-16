@@ -42,12 +42,13 @@ public class ChatClientImpl implements ChatClientInterface, Runnable
 	@Override
 	public void updateCurrentConversationParticipants(Conversation conv) throws RemoteException
 	{
+		System.out.println("!!!!!!!!!!!!!!!!!!!!!");
 		this.gui.setCurrentConversation(conv);
 	}
 
 	@Override
 	public void updateCurrentConversationHistory() throws RemoteException 
 	{
-throw new RuntimeException("Not implemented yet");
+		throw new RuntimeException("Not implemented yet");
 	}
 }

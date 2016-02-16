@@ -118,7 +118,7 @@ public class ChatServerImpl implements ChatServerInterface
 
 		for (String otherUser:conv.getUserName())// Update the state of all the participants
 		{
-			if (otherUser.equals(userName)) continue;
+			//if (otherUser.equals(userName)) continue;
 			user = this.userSet.get(otherUser);
 			user.getClient().updateCurrentConversationParticipants(conv);
 		}
